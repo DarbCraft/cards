@@ -40,7 +40,7 @@
     <button onclick="startGame()">Start Game</button>
     <button onclick="flipCard()" disabled id="flipButton">Flip a Card</button>
     <div id="cardDisplay" class="card">?</div>
-    <div id="timer">Time: 0s</div>
+    <div id="timer">Time: 0.00s</div>
     
     <script>
         let deck = [...Array(10).keys()].map(i => i + 1);
@@ -54,8 +54,8 @@
             document.getElementById("flipButton").disabled = false;
             startTime = Date.now();
             clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 1000);
-            document.getElementById("timer").innerText = "Time: 0s";
+            timerInterval = setInterval(updateTimer, 10);
+            document.getElementById("timer").innerText = "Time: 0.00s";
         }
         
         function flipCard() {
@@ -79,8 +79,8 @@
         }
         
         function updateTimer() {
-            let elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById("timer").innerText = "Time: " + elapsedTime + "s";
+            let elapsedTime = (Date.now() - startTime) / 1000;
+            document.getElementById("timer").innerText = "Time: " + elapsedTime.toFixed(2) + "s";
         }
     </script>
 </body>
