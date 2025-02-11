@@ -37,11 +37,20 @@
             border: none;
             border-radius: 10px;
             margin-top: 20px;
-            display: none;
+            display: inline-block;
+            cursor: not-allowed; /* Shows it's disabled initially */
+            opacity: 0.5; /* Makes it look disabled */
         }
         #timer {
             font-size: 20px;
             margin-top: 10px;
+        }
+        #cornerImage {
+            position: fixed;
+            bottom: 10px;  /* Distance from the bottom */
+            left: 10px;    /* Distance from the left */
+            width: 100px;  /* Adjust size */
+            height: auto;  /* Keeps aspect ratio */
         }
     </style>
 </head>
@@ -49,10 +58,13 @@
     <h1>Flip a Card</h1>
     <button onclick="startGame()">Start Game</button>
     <button onclick="flipCard()" disabled id="flipButton">Flip a Card</button>
-    <button onclick="stopTimer()" id="stopButton">STOP TIMER</button>
+    <button onclick="stopTimer()" id="stopButton" disabled>STOP TIMER</button>
     <div id="cardDisplay" class="card">?</div>
     <div id="timer">Time: 0.00s</div>
-    
+
+    <!-- Image in the bottom-left -->
+    <img id="cornerImage" src="https://github.com/DarbCraft/cards/blob/main/Mr%20Darby%20Memoji.PNG?raw=true" alt="Corner Image">
+
     <script>
         let deck = [];
         let flippedCards = [];
@@ -64,39 +76,43 @@
             flippedCards = [];
             document.getElementById("cardDisplay").innerText = "?";
             document.getElementById("flipButton").disabled = false;
-            document.getElementById("stopButton").style.display = "inline-block"; 
             document.getElementById("stopButton").disabled = false;
+            document.getElementById("stopButton").style.opacity = "1";
+            document.getElementById("stopButton").style.cursor = "pointer";
             startTime = Date.now();
             clearInterval(timerInterval);
             timerInterval = setInterval(updateTimer, 10);
             document.getElementById("timer").innerText = "Time: 0.00s";
         }
-        
+
         function flipCard() {
-            if (flippedCards.length === deck.length) {
+            if (deck.length === 0) {
                 alert("All cards have been flipped! Stop the timer.");
                 return;
             }
 
-            let flippedCard = deck[flippedCards.length]; // Flip in the shuffled order
+            let randomIndex = Math.floor(Math.random() * deck.length);
+            let flippedCard = deck.splice(randomIndex, 1)[0]; // Removes the card from the deck
             flippedCards.push(flippedCard);
             document.getElementById("cardDisplay").innerText = flippedCard;
         }
-        
+
         function stopTimer() {
             clearInterval(timerInterval);
             document.getElementById("flipButton").disabled = true;
             document.getElementById("stopButton").disabled = true;
+            document.getElementById("stopButton").style.opacity = "0.5";
+            document.getElementById("stopButton").style.cursor = "not-allowed";
             alert("Timer stopped! Final Time: " + document.getElementById("timer").innerText);
         }
-        
+
         function shuffleDeck(deck) {
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
             }
         }
-        
+
         function updateTimer() {
             let elapsedTime = (Date.now() - startTime) / 1000;
             document.getElementById("timer").innerText = "Time: " + elapsedTime.toFixed(2) + "s";
