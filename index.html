@@ -49,14 +49,14 @@
         
         function startGame() {
             // Generate the deck from 1 to 10 and shuffle it
-            deck = [...Array(10).keys()].map(i => i + 1);
+            deck = [...Array(11).keys()].map(i => i + 1);
             shuffleDeck(deck);
             flippedCards = [];
             document.getElementById("cardDisplay").innerText = "?";
             document.getElementById("flipButton").disabled = false;
             startTime = Date.now();
             clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 10);
+            timerInterval = setInterval(updateTimer, 11);
             document.getElementById("timer").innerText = "Time: 0.00s";
         }
         
