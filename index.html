@@ -48,7 +48,9 @@
         let startTime, timerInterval;
         
         function startGame() {
+            // Generate the deck from 1 to 10 and shuffle it
             deck = [...Array(10).keys()].map(i => i + 1);
+            shuffleDeck(deck);
             flippedCards = [];
             document.getElementById("cardDisplay").innerText = "?";
             document.getElementById("flipButton").disabled = false;
@@ -59,23 +61,37 @@
         }
         
         function flipCard() {
-            if (deck.length === 0) {
+            if (flippedCards.length === deck.length) {
+                // All cards have been flipped
                 clearInterval(timerInterval);
                 document.getElementById("flipButton").disabled = true;
                 alert("All cards flipped! Time: " + document.getElementById("timer").innerText);
                 return;
             }
             
-            let randomIndex = Math.floor(Math.random() * deck.length);
-            let flippedCard = deck.splice(randomIndex, 1)[0];
+            // Randomly flip a card that hasn't been flipped yet
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * deck.length);
+            } while (flippedCards.includes(deck[randomIndex]));
+
+            let flippedCard = deck[randomIndex];
             flippedCards.push(flippedCard);
 
             document.getElementById("cardDisplay").innerText = flippedCard;
 
-            if (deck.length === 0) {
+            // After all cards have been flipped, stop the game
+            if (flippedCards.length === deck.length) {
                 clearInterval(timerInterval);
                 document.getElementById("flipButton").disabled = true;
                 alert("All cards flipped! Time: " + document.getElementById("timer").innerText);
+            }
+        }
+        
+        function shuffleDeck(deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]]; // Swap elements
             }
         }
         
