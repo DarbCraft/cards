@@ -29,6 +29,16 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        #stopButton {
+            background-color: red;
+            color: white;
+            font-size: 24px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
         #timer {
             font-size: 20px;
             margin-top: 10px;
@@ -39,6 +49,7 @@
     <h1>Flip a Card</h1>
     <button onclick="startGame()">Start Game</button>
     <button onclick="flipCard()" disabled id="flipButton">Flip a Card</button>
+    <button onclick="stopTimer()" id="stopButton">STOP TIMER</button>
     <div id="cardDisplay" class="card">?</div>
     <div id="timer">Time: 0.00s</div>
     
@@ -46,52 +57,43 @@
         let deck = [];
         let flippedCards = [];
         let startTime, timerInterval;
-        
+
         function startGame() {
-            // Generate the deck from 1 to 10 and shuffle it
-            deck = [...Array(11).keys()].map(i => i + 1);
+            deck = [...Array(10).keys()].map(i => i + 1);
             shuffleDeck(deck);
             flippedCards = [];
             document.getElementById("cardDisplay").innerText = "?";
             document.getElementById("flipButton").disabled = false;
+            document.getElementById("stopButton").style.display = "inline-block"; 
+            document.getElementById("stopButton").disabled = false;
             startTime = Date.now();
             clearInterval(timerInterval);
-            timerInterval = setInterval(updateTimer, 11);
+            timerInterval = setInterval(updateTimer, 10);
             document.getElementById("timer").innerText = "Time: 0.00s";
         }
         
         function flipCard() {
             if (flippedCards.length === deck.length) {
-                // All cards have been flipped
-                clearInterval(timerInterval);
-                document.getElementById("flipButton").disabled = true;
-                alert("All cards flipped! Time: " + document.getElementById("timer").innerText);
+                alert("All cards have been flipped! Stop the timer.");
                 return;
             }
-            
-            // Randomly flip a card that hasn't been flipped yet
-            let randomIndex;
-            do {
-                randomIndex = Math.floor(Math.random() * deck.length);
-            } while (flippedCards.includes(deck[randomIndex]));
 
-            let flippedCard = deck[randomIndex];
+            let flippedCard = deck[flippedCards.length]; // Flip in the shuffled order
             flippedCards.push(flippedCard);
-
             document.getElementById("cardDisplay").innerText = flippedCard;
-
-            // After all cards have been flipped, stop the game
-            if (flippedCards.length === deck.length) {
-                clearInterval(timerInterval);
-                document.getElementById("flipButton").disabled = true;
-                alert("All cards flipped! Time: " + document.getElementById("timer").innerText);
-            }
+        }
+        
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById("flipButton").disabled = true;
+            document.getElementById("stopButton").disabled = true;
+            alert("Timer stopped! Final Time: " + document.getElementById("timer").innerText);
         }
         
         function shuffleDeck(deck) {
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]]; // Swap elements
+                [deck[i], deck[j]] = [deck[j], deck[i]];
             }
         }
         
